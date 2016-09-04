@@ -1,6 +1,6 @@
 (ns adventofcodeclojure.day7tests
   (:require [adventofcodeclojure
-             [day7 :as day]
+             [day7 :as d]
              [day7-parsing :as parsing]
              [day7-types :as types]]
             [clojure.test :as t :refer [deftest is]]))
@@ -44,4 +44,12 @@
 
 (deftest parse-all-input
   (is (= 339
-         (count (day/parse-input)))))
+         (count (d/parse-input)))))
+
+(deftest get-wire-value
+  (is (= 3 (d/get-wire-value "a" {"a" (types/->LiteralValue 3)})))
+  (is (= 1 (d/get-wire-value "a" {"a" (types/->And 3 1)})))
+  (is (= 3 (d/get-wire-value "a" {"a" (types/->Or 2 1)})))
+  (is (= 0 (d/get-wire-value "a" {"a" (types/->Not -1)})))
+  (is (= 2 (d/get-wire-value "a" {"a" (types/->LeftShift 1 1)})))
+  (is (= 1 (d/get-wire-value "a" {"a" (types/->RightShift 2 1)}))))

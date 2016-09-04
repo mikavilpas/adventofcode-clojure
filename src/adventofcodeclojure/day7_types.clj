@@ -5,7 +5,5 @@
 (defrecord And [a b])
 (defrecord Or [a b])
 (defrecord Not [value])
-(defrecord LeftShift [a b])
-(defrecord RightShift [a b])
-
-(apply hash-map [1 2 3 4])
+(defrecord LeftShift [a count])
+(defrecord RightShift [a count])

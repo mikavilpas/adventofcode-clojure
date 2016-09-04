@@ -11,7 +11,7 @@
         fargs (map #(read-string (second %)) (re-seq -re string))]
     `(format ~fstr ~@fargs)))
 
-(defn fmt-re [s]
+(defmacro fmt-re [s]
   `(re-pattern (fmt ~s)))
 
 (defn read-wire-or-value [input]
