@@ -1,43 +1,46 @@
 (ns adventofcodeclojure.day7tests
-  (:require [adventofcodeclojure.day7 :as day]
+  (:require [adventofcodeclojure
+             [day7 :as day]
+             [day7-parsing :as parsing]
+             [day7-types :as types]]
             [clojure.test :as t :refer [deftest is]]))
 
 (deftest read-wire-or-value-test
   (is (= 3
-         (day/read-wire-or-value "3")))
+         (parsing/read-wire-or-value "3")))
   (is (= "wireName"
-         (day/read-wire-or-value "wireName"))))
+         (parsing/read-wire-or-value "wireName"))))
 
 (deftest parsing
-  (is (= (day/->LiteralValue 3 "wireA")
-         (day/parse-instruction "3 -> wireA")))
-  (is (= (day/->LiteralValue "wire" "anotherWire")
-         (day/parse-instruction "wire -> anotherWire")))
+  (is (= (types/->LiteralValue 3 "wireA")
+         (parsing/parse-instruction "3 -> wireA")))
+  (is (= (types/->LiteralValue "wire" "anotherWire")
+         (parsing/parse-instruction "wire -> anotherWire")))
 
-  (is (= (day/->And "wire" 3 "anotherWire")
-         (day/parse-instruction "wire AND 3 -> anotherWire")))
-  (is (= (day/->And "a" "b" "c")
-         (day/parse-instruction "a AND b -> c")))
+  (is (= (types/->And "wire" 3 "anotherWire")
+         (parsing/parse-instruction "wire AND 3 -> anotherWire")))
+  (is (= (types/->And "a" "b" "c")
+         (parsing/parse-instruction "a AND b -> c")))
 
-  (is (= (day/->Or "wire" 3 "anotherWire")
-         (day/parse-instruction "wire OR 3 -> anotherWire")))
-  (is (= (day/->Or "a" "b" "c")
-         (day/parse-instruction "a OR b -> c")))
+  (is (= (types/->Or "wire" 3 "anotherWire")
+         (parsing/parse-instruction "wire OR 3 -> anotherWire")))
+  (is (= (types/->Or "a" "b" "c")
+         (parsing/parse-instruction "a OR b -> c")))
 
-  (is (= (day/->Not 3 "anotherWire")
-         (day/parse-instruction "NOT 3 -> anotherWire")))
-  (is (= (day/->Not "a" "b")
-         (day/parse-instruction "NOT a -> b")))
+  (is (= (types/->Not 3 "anotherWire")
+         (parsing/parse-instruction "NOT 3 -> anotherWire")))
+  (is (= (types/->Not "a" "b")
+         (parsing/parse-instruction "NOT a -> b")))
 
-  (is (= (day/->LeftShift "a" 3 "anotherWire")
-         (day/parse-instruction "a LSHIFT 3 -> anotherWire")))
-  (is (= (day/->LeftShift "a" "b" "targetWire")
-         (day/parse-instruction "a LSHIFT b -> targetWire")))
+  (is (= (types/->LeftShift "a" 3 "anotherWire")
+         (parsing/parse-instruction "a LSHIFT 3 -> anotherWire")))
+  (is (= (types/->LeftShift "a" "b" "targetWire")
+         (parsing/parse-instruction "a LSHIFT b -> targetWire")))
 
-  (is (= (day/->RightShift "a" 3 "anotherWire")
-         (day/parse-instruction "a RSHIFT 3 -> anotherWire")))
-  (is (= (day/->RightShift "a" "b" "targetWire")
-         (day/parse-instruction "a RSHIFT b -> targetWire"))))
+  (is (= (types/->RightShift "a" 3 "anotherWire")
+         (parsing/parse-instruction "a RSHIFT 3 -> anotherWire")))
+  (is (= (types/->RightShift "a" "b" "targetWire")
+         (parsing/parse-instruction "a RSHIFT b -> targetWire"))))
 
 (deftest parse-all-input
   (is (= 339
