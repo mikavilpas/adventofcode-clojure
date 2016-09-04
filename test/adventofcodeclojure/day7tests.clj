@@ -46,10 +46,14 @@
   (is (= 339
          (count (d/parse-input)))))
 
-(deftest get-wire-value
+(deftest get-wire-value-simple
   (is (= 3 (d/get-wire-value "a" {"a" (types/->LiteralValue 3)})))
   (is (= 1 (d/get-wire-value "a" {"a" (types/->And 3 1)})))
   (is (= 3 (d/get-wire-value "a" {"a" (types/->Or 2 1)})))
   (is (= 0 (d/get-wire-value "a" {"a" (types/->Not -1)})))
   (is (= 2 (d/get-wire-value "a" {"a" (types/->LeftShift 1 1)})))
   (is (= 1 (d/get-wire-value "a" {"a" (types/->RightShift 2 1)}))))
+
+(deftest get-wire-value-reference
+  (is (= 100 (d/get-wire-value "b" {"b" (types/->LiteralValue "a")
+                                    "a" (types/->LiteralValue 100)}))))

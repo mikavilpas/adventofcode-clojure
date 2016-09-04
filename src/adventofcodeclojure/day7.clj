@@ -10,26 +10,28 @@
 
 (defn parse-input []
   (let [input (str/split-lines (read-input))]
-    (map parsing/parse-instruction input)))
+    (into {}
+          (map parsing/parse-instruction input))))
 
-(defn get-wire-value [sym instructions]
-  (if (number? sym)
-    sym
-    (let [operation (get instructions sym)]
-      (condp = (type operation)
-        ;; reference to another wire
-        java.lang.String (get-wire-value operation instructions)
-        LiteralValue (:value operation)
-        And (bit-and (get-wire-value (:a operation) instructions)
-                     (get-wire-value (:b operation) instructions))
-        Or (bit-or (get-wire-value (:a operation) instructions)
-                   (get-wire-value (:b operation) instructions))
-        Not (bit-not (get-wire-value (:value operation) instructions))
-        LeftShift (bit-shift-left (get-wire-value (:a operation) instructions)
-                                  (:count operation))
-        RightShift (bit-shift-right (get-wire-value (:a operation) instructions)
-                                    (:count operation))
-        :else (str "no match for operation " operation)))))
+(def get-wire-value
+  (memoize (fn [sym instructions]
+             (if (number? sym)
+               sym
+               (let [operation (get instructions sym)]
+                 (condp = (type operation)
+                   ;; reference to another wire
+                   java.lang.String (get-wire-value operation instructions)
+                   LiteralValue (get-wire-value (:value operation) instructions)
+                   And (bit-and (get-wire-value (:a operation) instructions)
+                                (get-wire-value (:b operation) instructions))
+                   Or (bit-or (get-wire-value (:a operation) instructions)
+                              (get-wire-value (:b operation) instructions))
+                   Not (bit-not (get-wire-value (:value operation) instructions))
+                   LeftShift (bit-shift-left (get-wire-value (:a operation) instructions)
+                                             (:count operation))
+                   RightShift (bit-shift-right (get-wire-value (:a operation) instructions)
+                                               (:count operation))
+                   (str "no match for operation " operation)))))))
 
 (defn solve []
   (let [instructions (parse-input)]
