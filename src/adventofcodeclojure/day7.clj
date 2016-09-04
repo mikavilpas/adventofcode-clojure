@@ -1,9 +1,7 @@
 (ns adventofcodeclojure.day7
   (:require [clojure.java.io :as io]
-            [clojure.edn :as edn]))
-
-;; (defn parse-operation [input-string]
-;;   (cond ))
+            [clojure.edn :as edn]
+            [clojure.string :as str]))
 
 (defn read-input []
   (slurp (io/resource "Day7.txt")))
@@ -82,3 +80,7 @@
       (parse-left-shift input)
       (parse-right-shift input)
       (throw (new Exception (fmt "unable to parse '#{input}'")))))
+
+(defn parse-input []
+  (let [input (str/split-lines (read-input))]
+    (pmap parse-instruction input)))

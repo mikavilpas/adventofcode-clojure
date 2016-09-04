@@ -38,3 +38,7 @@
          (day/parse-instruction "a RSHIFT 3 -> anotherWire")))
   (is (= (day/->RightShift "a" "b" "targetWire")
          (day/parse-instruction "a RSHIFT b -> targetWire"))))
+
+(deftest parse-all-input
+  (is (= 339
+         (count (day/parse-input)))))
