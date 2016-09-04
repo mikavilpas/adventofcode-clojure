@@ -10,8 +10,8 @@
 
 ;; value can be a number or a target-wire
 (defrecord LiteralValue [value target-wire])
-(defrecord And [value target-wire])
-(defrecord Or [value target-wire])
+(defrecord And [a b target-wire])
+(defrecord Or [a b target-wire])
 (defrecord Not [value target-wire])
 (defrecord LeftShift [value target-wire])
 (defrecord RightShift [value target-wire])
@@ -32,9 +32,36 @@
       (symbol? value) (name value)
       (integer? value) value)))
 
+(def sym "([0-9a-zA-Z]+)")
+(def wireName "([a-zA-Z]+)")
+
+(defn- parse-literal [input]
+  (let [literal (fmt-re "^#{sym} -> #{wireName}$")]
+    (when-let [[[_ a target-wire]] (re-seq literal input)]
+      (->LiteralValue (read-wire-or-value a) target-wire))))
+
+(defn- parse-and [input]
+  (let [and (fmt-re "^#{sym} AND #{sym} -> #{wireName}$")]
+    (when-let [[[_ a b target-wire]] (re-seq and input)]
+      (->And (read-wire-or-value a)
+             (read-wire-or-value b)
+             target-wire))))
+
+(defn- parse-or [input]
+  (let [or (fmt-re "^#{sym} OR #{sym} -> #{wireName}$")]
+    (when-let [[[_ a b target-wire]] (re-seq or input)]
+      (->Or (read-wire-or-value a)
+            (read-wire-or-value b)
+            target-wire))))
+
+(defn- parse-not [input]
+  (let [not (fmt-re "^NOT #{sym} -> #{wireName}$")]
+    (when-let [[[_ a target-wire]] (re-seq not input)]
+      (->Not (read-wire-or-value a)
+             target-wire))))
+
 (defn parse-instruction [input]
-  (let [sym "([0-9a-zA-Z]+)"
-        wireName "([a-zA-Z]+)"
-        literal (fmt-re "#{sym} -> #{wireName}")]
-    (or (when-let [[[_ a b]] (re-seq literal input)]
-          (LiteralValue. (read-wire-or-value a) b)))))
+  (or (parse-literal input)
+      (parse-and input)
+      (parse-or input)
+      (parse-not input)))
