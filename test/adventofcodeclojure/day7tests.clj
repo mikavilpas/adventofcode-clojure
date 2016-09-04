@@ -27,4 +27,14 @@
   (is (= (day/->Not 3 "anotherWire")
          (day/parse-instruction "NOT 3 -> anotherWire")))
   (is (= (day/->Not "a" "b")
-         (day/parse-instruction "NOT a -> b"))))
+         (day/parse-instruction "NOT a -> b")))
+
+  (is (= (day/->LeftShift "a" 3 "anotherWire")
+         (day/parse-instruction "a LSHIFT 3 -> anotherWire")))
+  (is (= (day/->LeftShift "a" "b" "targetWire")
+         (day/parse-instruction "a LSHIFT b -> targetWire")))
+
+  (is (= (day/->RightShift "a" 3 "anotherWire")
+         (day/parse-instruction "a RSHIFT 3 -> anotherWire")))
+  (is (= (day/->RightShift "a" "b" "targetWire")
+         (day/parse-instruction "a RSHIFT b -> targetWire"))))

@@ -13,8 +13,8 @@
 (defrecord And [a b target-wire])
 (defrecord Or [a b target-wire])
 (defrecord Not [value target-wire])
-(defrecord LeftShift [value target-wire])
-(defrecord RightShift [value target-wire])
+(defrecord LeftShift [a b target-wire])
+(defrecord RightShift [a b target-wire])
 
 ;; string interpolation from https://gist.github.com/blacktaxi/1676575
 (defmacro fmt [^String string]
@@ -60,8 +60,25 @@
       (->Not (read-wire-or-value a)
              target-wire))))
 
+(defn- parse-left-shift [input]
+  (let [not (fmt-re "^#{sym} LSHIFT #{sym} -> #{wireName}$")]
+    (when-let [[[_ a b target-wire]] (re-seq not input)]
+      (->LeftShift (read-wire-or-value a)
+                   (read-wire-or-value b)
+                   target-wire))))
+
+(defn- parse-right-shift [input]
+  (let [not (fmt-re "^#{sym} RSHIFT #{sym} -> #{wireName}$")]
+    (when-let [[[_ a b target-wire]] (re-seq not input)]
+      (->RightShift (read-wire-or-value a)
+                    (read-wire-or-value b)
+                    target-wire))))
+
 (defn parse-instruction [input]
   (or (parse-literal input)
       (parse-and input)
       (parse-or input)
-      (parse-not input)))
+      (parse-not input)
+      (parse-left-shift input)
+      (parse-right-shift input)
+      (throw (new Exception (fmt "unable to parse '#{input}'")))))
