@@ -35,4 +35,5 @@
 
 (defn solve []
   (let [instructions (parse-input)]
+    ;; gives the answer 46065 in about a second on a single cpu core
     (get-wire-value "a" instructions)))
