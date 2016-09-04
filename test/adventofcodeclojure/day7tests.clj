@@ -12,34 +12,34 @@
          (parsing/read-wire-or-value "wireName"))))
 
 (deftest parsing
-  (is (= (types/->LiteralValue 3 "wireA")
+  (is (= {"wireA" (types/->LiteralValue 3)}
          (parsing/parse-instruction "3 -> wireA")))
-  (is (= (types/->LiteralValue "wire" "anotherWire")
+  (is (= {"anotherWire" (types/->LiteralValue "wire")}
          (parsing/parse-instruction "wire -> anotherWire")))
 
-  (is (= (types/->And "wire" 3 "anotherWire")
+  (is (= {"anotherWire" (types/->And "wire" 3)}
          (parsing/parse-instruction "wire AND 3 -> anotherWire")))
-  (is (= (types/->And "a" "b" "c")
+  (is (= {"c" (types/->And "a" "b")}
          (parsing/parse-instruction "a AND b -> c")))
 
-  (is (= (types/->Or "wire" 3 "anotherWire")
+  (is (= {"anotherWire" (types/->Or "wire" 3)}
          (parsing/parse-instruction "wire OR 3 -> anotherWire")))
-  (is (= (types/->Or "a" "b" "c")
+  (is (= {"c" (types/->Or "a" "b")}
          (parsing/parse-instruction "a OR b -> c")))
 
-  (is (= (types/->Not 3 "anotherWire")
+  (is (= {"anotherWire" (types/->Not 3)}
          (parsing/parse-instruction "NOT 3 -> anotherWire")))
-  (is (= (types/->Not "a" "b")
+  (is (= {"b" (types/->Not "a")}
          (parsing/parse-instruction "NOT a -> b")))
 
-  (is (= (types/->LeftShift "a" 3 "anotherWire")
+  (is (= {"anotherWire" (types/->LeftShift "a" 3)}
          (parsing/parse-instruction "a LSHIFT 3 -> anotherWire")))
-  (is (= (types/->LeftShift "a" "b" "targetWire")
+  (is (= {"targetWire" (types/->LeftShift "a" "b")}
          (parsing/parse-instruction "a LSHIFT b -> targetWire")))
 
-  (is (= (types/->RightShift "a" 3 "anotherWire")
+  (is (= {"anotherWire" (types/->RightShift "a" 3)}
          (parsing/parse-instruction "a RSHIFT 3 -> anotherWire")))
-  (is (= (types/->RightShift "a" "b" "targetWire")
+  (is (= {"targetWire" (types/->RightShift "a" "b")}
          (parsing/parse-instruction "a RSHIFT b -> targetWire"))))
 
 (deftest parse-all-input

@@ -26,41 +26,36 @@
 (defn- parse-literal [input]
   (let [literal (fmt-re "^#{sym} -> #{wireName}$")]
     (when-let [[[_ a target-wire]] (re-seq literal input)]
-      (types/->LiteralValue (read-wire-or-value a) target-wire))))
+      {target-wire (types/->LiteralValue (read-wire-or-value a))})))
 
 (defn- parse-and [input]
   (let [and (fmt-re "^#{sym} AND #{sym} -> #{wireName}$")]
     (when-let [[[_ a b target-wire]] (re-seq and input)]
-      (types/->And (read-wire-or-value a)
-                   (read-wire-or-value b)
-                   target-wire))))
+      {target-wire (types/->And (read-wire-or-value a)
+                                (read-wire-or-value b))})))
 
 (defn- parse-or [input]
   (let [or (fmt-re "^#{sym} OR #{sym} -> #{wireName}$")]
     (when-let [[[_ a b target-wire]] (re-seq or input)]
-      (types/->Or (read-wire-or-value a)
-                  (read-wire-or-value b)
-                  target-wire))))
+      {target-wire (types/->Or (read-wire-or-value a)
+                               (read-wire-or-value b))})))
 
 (defn- parse-not [input]
   (let [not (fmt-re "^NOT #{sym} -> #{wireName}$")]
     (when-let [[[_ a target-wire]] (re-seq not input)]
-      (types/->Not (read-wire-or-value a)
-                   target-wire))))
+      {target-wire (types/->Not (read-wire-or-value a))})))
 
 (defn- parse-left-shift [input]
   (let [not (fmt-re "^#{sym} LSHIFT #{sym} -> #{wireName}$")]
     (when-let [[[_ a b target-wire]] (re-seq not input)]
-      (types/->LeftShift (read-wire-or-value a)
-                         (read-wire-or-value b)
-                         target-wire))))
+      {target-wire (types/->LeftShift (read-wire-or-value a)
+                                      (read-wire-or-value b))})))
 
 (defn- parse-right-shift [input]
   (let [not (fmt-re "^#{sym} RSHIFT #{sym} -> #{wireName}$")]
     (when-let [[[_ a b target-wire]] (re-seq not input)]
-      (types/->RightShift (read-wire-or-value a)
-                          (read-wire-or-value b)
-                          target-wire))))
+      {target-wire (types/->RightShift (read-wire-or-value a)
+                                       (read-wire-or-value b))})))
 
 (defn parse-instruction [input]
   (or (parse-literal input)
