@@ -5,3 +5,11 @@
 (deftest wrapping
   (is (= 58 (sut/wrapping 2 3 4)))
   (is (= 43 (sut/wrapping 1 1 10))))
+
+(deftest ribbon
+  (is (= 10 (sut/ribbon 2 3 4)))
+  (is (= 4 (sut/ribbon 1 1 10))))
+
+(deftest bow
+  (is (= 24 (sut/bow 2 3 4)))
+  (is (= 10 (sut/bow 1 1 10))))

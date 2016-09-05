@@ -28,13 +28,38 @@
          input)))
 
 (defn solve-amount-of-wrapping []
-  (let [input (parse-input)]
+  (let [presents (parse-input)]
     (reduce (fn [total present]
               (+ total (apply wrapping present)))
             0
-            input)))
+            presents)))
 
 (comment
   (solve-amount-of-wrapping)
   ;; 1598415
+  )
+
+(defn ribbon [l w h]
+  (let [face-perimeters [(* 2 (+ l w))
+                         (* 2 (+ l h))
+                         (* 2 (+ w h))]
+        smallest-face-perimeter (first (take 1 (sort < face-perimeters)))]
+    smallest-face-perimeter))
+
+(defn bow [l w h]
+  (let [volume (* l w h)]
+    volume))
+
+(defn solve-total-ribbon-amount []
+  (let [presents (parse-input)]
+    (reduce (fn [total present]
+              (+ total
+                 (apply ribbon present)
+                 (apply bow present)))
+            0
+            presents)))
+
+(comment
+  (solve-total-ribbon-amount)
+  ;; 3812909
   )
