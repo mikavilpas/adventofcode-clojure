@@ -40,3 +40,19 @@
   (solve-visited-houses-count)
   ;; 2081
   )
+
+(defn solve-santa-and-robo-santa-visited-houses-count []
+  (let [input (parse-input)
+        start-position [0 0]
+        santa-route (take-nth 2 input)
+        robo-route (take-nth 2 (rest input))
+
+        santa-visited-houses (reductions move-santa start-position santa-route)
+        robo-visited-houses (reductions move-santa start-position robo-route)]
+
+    (count
+     (set (concat santa-visited-houses
+                  robo-visited-houses)))))
+
+(comment
+  (solve-santa-and-robo-santa-visited-houses-count))
