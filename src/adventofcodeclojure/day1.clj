@@ -18,3 +18,14 @@
   (get-final-floor (read-input))
   ;; returns 74
   )
+
+(defn nth-instruction-to-enter-basement []
+  (let [input (read-input)
+        result-floors (reductions walk-floor 0 input)]
+    (->> result-floors
+         (take-while #(not= % -2))
+         count
+         ;; index is zero based
+         dec))
+  ;; returns 1795
+  )
