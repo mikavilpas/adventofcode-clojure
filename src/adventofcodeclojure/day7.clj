@@ -1,15 +1,13 @@
 (ns adventofcodeclojure.day7
   (:require [adventofcodeclojure.day7-parsing :as parsing]
+            [adventofcodeclojure.input-reader :as input-reader]
             [clojure.java.io :as io]
             [clojure.string :as str])
   (:import [adventofcodeclojure.day7_types
             LiteralValue And Not Or LeftShift RightShift]))
 
-(defn read-input []
-  (slurp (io/resource "Day7.txt")))
-
 (defn parse-input []
-  (let [input (str/split-lines (read-input))]
+  (let [input (input-reader/read-input-lines "Day7.txt")]
     (into {}
           (map parsing/parse-instruction input))))
 

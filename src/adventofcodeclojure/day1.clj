@@ -1,11 +1,12 @@
 (ns adventofcodeclojure.day1
-  (:require [clojure.java.io :as io]))
+  (:require [clojure.java.io :as io]
+            [adventofcodeclojure.input-reader :as input-reader]))
 
 (def up? #{\( "("})
 (def down? #{\) ")"})
 
 (defn read-input []
-  (slurp (io/resource "Day1.txt")))
+  (input-reader/read-input "Day1.txt"))
 
 (defn walk-floor [floor-number direction]
   (cond (some? (up? direction)) (inc floor-number)
