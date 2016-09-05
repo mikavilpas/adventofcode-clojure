@@ -28,9 +28,9 @@
 
 (defn solve-visited-houses-count []
   (let [directions (parse-input)
-        santa [0 0]
+        start-position [0 0]
         all-visited-positions (reductions move-santa
-                                          santa
+                                          start-position
                                           directions)]
     (-> all-visited-positions
         set
