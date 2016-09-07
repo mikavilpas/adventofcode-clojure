@@ -35,10 +35,10 @@
   (let [bs (first-hexadecimal-numbers n hash-bytes-seq)]
     (every? zero? bs)))
 
-(defn solve []
+(defn solve [leading-zero-count]
   (let [hashes-starting-with-zeroes (pmap (juxt hash-for-secret-key identity)
                                           (range))
-        starts-with-5-zeroes #(starts-with-n-zeroes 5 (first %))
+        starts-with-5-zeroes #(starts-with-n-zeroes leading-zero-count (first %))
         first-solution (->> hashes-starting-with-zeroes
                             (filter starts-with-5-zeroes)
                             first)]
@@ -46,8 +46,14 @@
      :answer (second first-solution)}))
 
 (comment
-  (solve)
+  (solve 5)
   ;; returns
   ;; {:hash "0000045c5e2b3911eb937d9d8c574f09",
   ;;  :answer 346386}
+
+  (solve 6)
+  ;; "Elapsed time: 51120.984289 msecs"
+  ;; {:hash "00000094434e1914548b3a1af245fb27", :answer 9958218}
+
+  ;; on my couple-year-old 4 core machine
   )
