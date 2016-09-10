@@ -34,3 +34,42 @@
   (solve-how-many-strings-are-nice)
   ;; 258
   )
+
+;; part 2
+(defn get-pairs-at-indices [s]
+  (->> (partition 2 1 s)
+       (zipmap (range))
+       (group-by second)
+       (map (fn [[pair indices-with-pairs]]
+              [pair (map first indices-with-pairs)]))
+       (into {})))
+
+(defn indices-not-too-close? [indices]
+  (let [indices (sort-by < (distinct indices))]
+    (some (fn [i]
+            (some (fn [ii]
+                    (> (Math/abs (- i ii)) 1))
+                  indices))
+          indices)))
+
+(defn has-pair-of-letters-appearing-twice [s]
+  (let [pairs-at-indices (get-pairs-at-indices s)]
+    (some (fn [[pair indices]]
+            (indices-not-too-close? indices))
+          pairs-at-indices)))
+
+(defn has-letter-which-repeats-with-one-letter-in-between [s]
+  (some (fn [[a b c]]
+          (= a c))
+        (partition 3 1 s)))
+
+(defn nice-string?-part-2 [s]
+  (and (has-pair-of-letters-appearing-twice s)
+       (has-letter-which-repeats-with-one-letter-in-between s)))
+
+(defn solve-how-many-strings-are-nice-2 []
+  (->> (get-input-lines)
+       (filter nice-string?-part-2)
+       count)
+  ;; 53
+  )
