@@ -7,8 +7,8 @@
 (defrecord TurnOff [range])
 (defrecord Toggle [range])
 
-(defn get-empty-grid []
-  (let [row (into [] (repeat 1000 false))]
+(defn get-empty-grid [& {:keys [empty-value] :or [empty-value false]}]
+  (let [row (into [] (repeat 1000 empty-value))]
     (loop [grid (transient [])
            row-number 1]
       (if (<= row-number 1000)
@@ -33,16 +33,19 @@
   (let [input (input-reader/read-input-lines "Day6.txt")]
     (map parse-instruction input)))
 
+(defn- grid-updater-fn [grid target-cell-indices]
+  (fn [updater]
+    (reduce (fn [result [row cell]]
+              (update-in result [row cell] updater))
+            grid
+            target-cell-indices)))
+
 (defn switch-lights [grid instruction]
   (let [{:keys [xa ya xb yb]} (:range instruction)
         target-cell-indices (for [row (range ya (inc yb))
                                   cell (range xa (inc xb))]
                               [row cell])
-        update-grid-cells (fn [updater]
-                            (reduce (fn [result [row cell]]
-                                      (update-in result [row cell] updater))
-                                    grid
-                                    target-cell-indices))]
+        update-grid-cells (grid-updater-fn grid target-cell-indices)]
     (condp = (type instruction)
       TurnOn (update-grid-cells (constantly true))
       TurnOff (update-grid-cells (constantly false))
@@ -57,4 +60,29 @@
 (comment
   (solve-amount-of-lit-lights)
   ;; 543903
+  )
+
+;; part 2
+(defn change-light-brightness [grid instruction]
+  (let [{:keys [xa ya xb yb]} (:range instruction)
+        target-cell-indices (for [row (range ya (inc yb))
+                                  cell (range xa (inc xb))]
+                              [row cell])
+        update-grid-cells (grid-updater-fn grid target-cell-indices)]
+    (condp = (type instruction)
+      TurnOn (update-grid-cells inc)
+      TurnOff (update-grid-cells (fn [brightness]
+                                   (max 0 (dec brightness))))
+      Toggle (update-grid-cells (fn [brightness]
+                                  (-> brightness inc inc))))))
+
+(defn solve-total-brightness-of-grid []
+  (->> (parse-input)
+       (reduce change-light-brightness (get-empty-grid :empty-value 0))
+       (pmap #(reduce + 0 %))
+       (reduce +)))
+
+(comment
+  (solve-total-brightness-of-grid)
+  ;; 14687245
   )

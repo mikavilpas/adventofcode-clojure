@@ -45,3 +45,23 @@
   (is (= [[false false]
           [false true]]
          (day/switch-lights two-by-two-grid (day/->Toggle (day/->Range 1 1 1 1))))))
+
+(def two-by-two-brightness-grid [[0 0]
+                                 [0 0]])
+
+(deftest change-light-brightness-test
+  (is (= [[0 1]
+          [0 0]]
+         (day/change-light-brightness two-by-two-brightness-grid
+                                      (day/->TurnOn (day/->Range 1 0 1 0)))))
+  (is (= two-by-two-brightness-grid
+         (day/change-light-brightness [[0 1]
+                                       [0 0]]
+                                      (day/->TurnOff (day/->Range 1 0 1 0)))))
+  ;; will not go under 0
+  (is (= two-by-two-brightness-grid
+         (day/change-light-brightness two-by-two-brightness-grid
+                                      (day/->TurnOff (day/->Range 0 0 0 0)))))
+  (is (= [[0 2] [0 0]]
+         (day/change-light-brightness two-by-two-brightness-grid
+                                      (day/->Toggle (day/->Range 1 0 1 0))))))
