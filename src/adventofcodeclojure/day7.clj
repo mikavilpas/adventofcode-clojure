@@ -2,7 +2,8 @@
   (:require [adventofcodeclojure.day7-parsing :as parsing]
             [adventofcodeclojure.input-reader :as input-reader]
             [clojure.java.io :as io]
-            [clojure.string :as str])
+            [clojure.string :as str]
+            [adventofcodeclojure.day7-types :as types])
   (:import [adventofcodeclojure.day7_types
             LiteralValue And Not Or LeftShift RightShift]))
 
@@ -35,3 +36,22 @@
   (let [instructions (parse-input)]
     ;; gives the answer 46065 in about a second on a single cpu core
     (get-wire-value "a" instructions)))
+
+(comment
+  (solve)
+  ;; 46065
+  )
+
+;; part 2
+(defn solve-part-2 []
+  (let [instructions (parse-input)
+        wire-a-signal (get-wire-value "a" instructions)
+        new-instructions (update instructions "b"
+                                 (constantly (types/->LiteralValue wire-a-signal)))]
+    (get-wire-value "a" new-instructions)))
+
+(comment
+  (solve-part-2)
+  ;; very, very fast, again! yay!
+  ;; gives 14134
+  )
