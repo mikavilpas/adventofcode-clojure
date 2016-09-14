@@ -20,3 +20,10 @@
 (deftest solve-code-length-minus-computer-memory-length-test
   (is (= 17
          (day/solve-code-length-minus-computer-memory-length (get-test-input)))))
+
+;; part 2
+
+(deftest encode-test
+  (is (= [6 9 16 11 11]
+         (->> (get-test-input)
+              (mapv day/encode)))))
