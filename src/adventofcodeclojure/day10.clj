@@ -6,9 +6,15 @@
        (mapcat (juxt count first))
        (apply str)))
 
-(defn solve []
+(comment
+  (-> (iterate look-and-say
+               "1113222113")
+      (nth 40)
+      count)
+  ;; 252594
+  (-> (iterate look-and-say
+               "1113222113")
+      (nth 50)
+      count)
   ;; 3579328
-  (count
-   (reduce (fn [result _] (look-and-say result))
-           "1113222113"
-           (range 50))))
+  )
