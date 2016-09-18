@@ -44,13 +44,16 @@
               [pair (map first indices-with-pairs)]))
        (into {})))
 
-(defn indices-not-too-close? [indices]
+(defn non-overlapping-pair-indices [indices]
   (let [indices (sort-by < (distinct indices))]
-    (some (fn [i]
-            (some (fn [ii]
-                    (> (Math/abs (- i ii)) 1))
-                  indices))
-          indices)))
+    (filter (fn [i]
+              (some (fn [ii]
+                      (> (Math/abs (- i ii)) 1))
+                    indices))
+            indices)))
+
+(defn indices-not-too-close? [indices]
+  (not (empty? (non-overlapping-pair-indices indices))))
 
 (defn has-pair-of-letters-appearing-twice [s]
   (let [pairs-at-indices (get-pairs-at-indices s)]
