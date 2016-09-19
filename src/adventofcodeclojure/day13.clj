@@ -38,18 +38,36 @@
             0
             neighbors)))
 
+(defn- attendees [happinesses]
+  (->> (keys happinesses)
+       (mapcat flatten)
+       set))
+
 (defn seating-order-with-max-happiness [happinesses]
-  (let [attendees (->> (keys happinesses)
-                       (mapcat flatten)
-                       set)
-        sitting-orders (seating-orders attendees)]
+  (let [names (attendees happinesses)
+        sitting-orders (seating-orders names)]
     (->> sitting-orders
          (apply max-key (partial count-happiness happinesses)))))
 
+;; part 1
 (comment
   (let [happinesses (-> (read-input) parse-input)
-        best-sitting-order (seating-order-with-max-happiness
-                            happinesses)]
+        best-sitting-order (seating-order-with-max-happiness happinesses)]
     (count-happiness happinesses best-sitting-order))
   ;; 618
+  )
+
+;; part 2
+(comment
+  (let [happinesses (-> (read-input) parse-input)
+        names (conj (attendees happinesses) "me")
+        happinesses (reduce (fn [result name]
+                              (assoc result
+                                     [name "me"] 0
+                                     ["me" name] 0))
+                            happinesses
+                            names)
+        best-sitting-order (seating-order-with-max-happiness happinesses)]
+    (count-happiness happinesses best-sitting-order))
+  ;; 601
   )
