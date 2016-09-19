@@ -1,7 +1,6 @@
 (ns adventofcodeclojure.day11
   (:require [clojure.string :as string]
-            [adventofcodeclojure.day5 :as day5]
-            [clojure.math.combinatorics :as combo]))
+            [adventofcodeclojure.day5 :as day5]))
 
 (def characters (zipmap "abcdefghijklmnopqrstuvwxyz" (range)))
 (def numbers (zipmap (range) "abcdefghijklmnopqrstuvwxyza"))
