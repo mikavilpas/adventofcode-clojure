@@ -53,3 +53,47 @@ Prancer can fly 25 km/s for 6 seconds, but then must rest for 143 seconds."))
 (comment
   (winner-at (parse-reindeers input)
              2503))
+
+;; part 2
+(defn increase-winners-scores [scores race-status]
+  (let [winners (->> race-status
+                     (group-by val)
+                     (apply max-key first)
+                     second
+                     (map key))]
+    (reduce (fn [scores reindeer]
+              (update-in scores [reindeer] inc))
+            scores
+            winners)))
+
+(defn- race-distances [reindeers finish-time]
+  (let [races (->> (for [reindeer reindeers
+                         :let [distances (race reindeer)]]
+                     {reindeer distances})
+                   (into {}))]
+    (for [time (range (inc finish-time))]
+      (into {}
+            (map (fn [[reindeer race]]
+                   {reindeer (nth race time)})
+                 races)))))
+
+(defn score-at [reindeers finish-time]
+  (let [initial-scores (into {}
+                             (for [reindeer reindeers]
+                               [reindeer 0]))
+        distances (race-distances reindeers finish-time)]
+    (reduce increase-winners-scores
+            initial-scores
+            ;; don't give scores until the race has started
+            (rest distances))))
+
+(defn winner-by-score-at [reindeers time]
+  (->> (score-at reindeers time)
+       ;; data should be like this:
+       ;; {{:name "Donner", :speed 19, :fly-time 9, :rest-time 164} 589,}
+       (apply max-key val)))
+
+(comment
+  (winner-by-score-at (parse-reindeers input) 2503)
+  ;; [{:name "Blitzen", :speed 19, :fly-time 9, :rest-time 158} 1256]
+  )

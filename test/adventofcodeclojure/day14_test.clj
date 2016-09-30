@@ -41,3 +41,12 @@
   (is (= [{:reindeer comet, :distance 140}
           {:reindeer dancer, :distance 160}]
          (day/race-at [comet dancer] 10))))
+
+(deftest score-at-test
+  (is (= {comet 0, dancer 0}
+         (day/score-at [comet dancer]
+                       0)))
+
+  (is (= {comet 0, dancer 1}
+         (day/score-at [comet dancer]
+                       1))))
